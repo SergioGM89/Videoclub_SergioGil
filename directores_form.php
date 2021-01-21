@@ -1,3 +1,9 @@
+<?php
+//Incluímos las librerías
+include("bbdd/directores_crud.php");
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -15,8 +21,43 @@
         <a href="./peliculas.php" class="btn btn-dark">Películas</a>&nbsp;&nbsp;
     </div>
     <div class="container">
-        <!-- ESCRIBE AQUÍ TU CODIGO -->
+        <h1>Edición de directores</h1>
+		 <!-- INCLUIR CÓDIGO PHP -->
+        <?php
+        
+        //Obtenemos los datos del director
+        $director = directores_crud::obtener($_GET['id']);
+
+        //Comprobamos si se le ha dado al botón GUARDAR
+        if(isset($_POST['guardar'])){
+            //Actualizamos el director de la BD
+            if(directores_crud::actualizar($director) == 1){
+                echo "<div class='alert alert-success' role='alert'>";
+                echo "El director ha sido actualizado correctamente.";
+                echo "</div>"; 
+            }else{
+                echo "<div class='alert alert-success' role='alert'>";
+                echo "ERROR! No se ha podido actualizar el director. Inténtelo de nuevo más tarde.";
+                echo "</div>"; 
+            }
+        }
+        
+        ?>
+
+        <form name="edicion" method="post" action=''.$_SERVER[PHP_SELF]>
+            
+            Nombre: <br><input type="text" name="nombre" placeholder="<?php echo "".$director['nombre']; ?>"><br>
+            <br> 
+            Año de Nacimiento: <br><input type="text" name="anyo" placeholder="<?php echo "".$director['anyoNacimiento']; ?>"><br>
+            <br>
+            País: <br><input type="text" name="pais" placeholder="<?php echo "".$director['pais']; ?> "><br>
+            <br>
+            <input class = "btn btn-primary" type="submit" name="guardar" value="Guardar">
+        </form>
+        
+
     </div>
+
 
 </body>
 
