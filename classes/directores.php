@@ -2,23 +2,33 @@
 class director
 {
 
-    //Devolvemos un array con todos los directores
-    public static function tabla_directores()
-    {
+    private $id;
+    private $nombre;
+    private $anyo;
+    private $pais;
 
-        //Incluímos librerías
-        //include("lib/utils.php");
-        include("lib/database.php");
-        include("classes/usuarios.php");
+    //Constructor
+    function __construct($id, $nombre, $anyo, $pais){
+        $this->id = $id;
+        $this->nombre = $nombre;
+        $this->anyo = $anyo;
+        $this->pais = $pais;
+    }
 
-        //Conectamos con la BD videoclub
-        $pdo = Database::connect();
-
-        $sql = "SELECT * FROM directores";
-        $query = $pdo->prepare($sql);
-        $query->execute();
-        $results = $query->fetchAll(PDO::FETCH_OBJ);
-
-        return $results;
+    //GETTERS
+    public function getId(){
+        return $this->id;
+    }
+    
+    public function getNombre(){
+        return $this->nombre;
+    }
+    
+    public function getAnyo(){
+        return $this->anyo;
+    }
+    
+    public function getPais(){
+        return $this->pais;
     }
 }

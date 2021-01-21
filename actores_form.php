@@ -1,3 +1,8 @@
+<?php
+//Incluímos las librerías
+include("bbdd/actores_crud.php");
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -15,7 +20,43 @@
         <a href="./peliculas.php" class="btn btn-dark">Películas</a>&nbsp;&nbsp;
     </div>
     <div class="container">
-        <!-- ESCRIBE AQUÍ TU CODIGO -->
+        <h1>Edición de actores</h1>
+		 <!-- INCLUIR CÓDIGO PHP -->
+        <?php
+        
+        //Obtenemos los datos del actor
+        $actor = actores_crud::obtener($_GET['id']);
+
+        //Comprobamos si se le ha dado al botón GUARDAR
+        if(isset($_POST['guardar'])){
+            //Actualizamos el actor de la BD
+            if(actores_crud::actualizar($actor) == 1){
+                echo "<div class='alert alert-success' role='alert'>";
+                echo "El actor ha sido actualizado correctamente.<br>";
+                echo "<a href='peliculas.html'>Volver al incio</a>";
+                echo "</div>"; 
+            }else{
+                echo "<div class='alert alert-success' role='alert'>";
+                echo "ERROR! No se ha podido actualizar el actor. Inténtelo de nuevo más tarde.<br>";
+                echo "<a href='peliculas.html'>Volver al incio</a>";
+                echo "</div>"; 
+            }
+        }
+        
+        ?>
+
+        <form name="edicion" method="post" action=''.$_SERVER[PHP_SELF]>
+            
+            Nombre: <br><input type="text" name="nombre" placeholder="<?php echo "".$actor->getNombre(); ?>"><br>
+            <br> 
+            Año de Nacimiento: <br><input type="text" name="anyo" placeholder="<?php echo "".$actor->getAnyo(); ?>"><br>
+            <br>
+            País: <br><input type="text" name="pais" placeholder="<?php echo "".$actor->getPais(); ?> "><br>
+            <br>
+            <input class = "btn btn-primary" type="submit" name="guardar" value="Guardar">
+        </form>
+        
+
     </div>
 
 </body>

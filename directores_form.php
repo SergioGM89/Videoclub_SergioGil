@@ -33,11 +33,13 @@ include("bbdd/directores_crud.php");
             //Actualizamos el director de la BD
             if(directores_crud::actualizar($director) == 1){
                 echo "<div class='alert alert-success' role='alert'>";
-                echo "El director ha sido actualizado correctamente.";
+                echo "El director ha sido actualizado correctamente.<br>";
+                echo "<a href='peliculas.html'>Volver al incio</a>";
                 echo "</div>"; 
             }else{
                 echo "<div class='alert alert-success' role='alert'>";
-                echo "ERROR! No se ha podido actualizar el director. Inténtelo de nuevo más tarde.";
+                echo "ERROR! No se ha podido actualizar el director. Inténtelo de nuevo más tarde.<br>";
+                echo "<a href='peliculas.html'>Volver al incio</a>";
                 echo "</div>"; 
             }
         }
@@ -46,11 +48,11 @@ include("bbdd/directores_crud.php");
 
         <form name="edicion" method="post" action=''.$_SERVER[PHP_SELF]>
             
-            Nombre: <br><input type="text" name="nombre" placeholder="<?php echo "".$director['nombre']; ?>"><br>
+            Nombre: <br><input type="text" name="nombre" placeholder="<?php echo "".$director->getNombre(); ?>"><br>
             <br> 
-            Año de Nacimiento: <br><input type="text" name="anyo" placeholder="<?php echo "".$director['anyoNacimiento']; ?>"><br>
+            Año de Nacimiento: <br><input type="text" name="anyo" placeholder="<?php echo "".$director->getAnyo(); ?>"><br>
             <br>
-            País: <br><input type="text" name="pais" placeholder="<?php echo "".$director['pais']; ?> "><br>
+            País: <br><input type="text" name="pais" placeholder="<?php echo "".$director->getPais(); ?> "><br>
             <br>
             <input class = "btn btn-primary" type="submit" name="guardar" value="Guardar">
         </form>

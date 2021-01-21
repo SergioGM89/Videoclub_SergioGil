@@ -29,11 +29,13 @@ include("bbdd/directores_crud.php");
             //Eliminamos el director de la BD
             if(directores_crud::eliminar($_GET['id']) == 1){
                 echo "<div class='alert alert-success' role='alert'>";
-                echo "El director ha sido borrado correctamente.";
+                echo "El director ha sido borrado correctamente.<br>";
+                echo "<a href='peliculas.html'>Volver al incio</a>";
                 echo "</div>"; 
             }else{
                 echo "<div class='alert alert-success' role='alert'>";
-                echo "ERROR! No se ha podido eliminar el director. Inténtelo de nuevo más tarde.";
+                echo "ERROR! No se ha podido eliminar el director. Inténtelo de nuevo más tarde.<br>";
+                echo "<a href='peliculas.html'>Volver al incio</a>";
                 echo "</div>"; 
             }
         }
