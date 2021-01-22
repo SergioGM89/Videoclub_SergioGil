@@ -1,7 +1,7 @@
 <?php
 //Incluímos las librerías
-include("lib/database.php");
-include("classes/directores.php");
+include_once("lib/database.php");
+include_once("classes/directores.php");
 
 class directores_crud
 {

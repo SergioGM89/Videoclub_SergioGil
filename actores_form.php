@@ -1,6 +1,7 @@
 <?php
 //Incluímos las librerías
-include("bbdd/actores_crud.php");
+include_once("bbdd/actores_crud.php");
+include_once("classes/actores.php");
 ?>
 
 <!DOCTYPE html>
@@ -20,38 +21,41 @@ include("bbdd/actores_crud.php");
         <a href="./peliculas.php" class="btn btn-dark">Películas</a>&nbsp;&nbsp;
     </div>
     <div class="container">
-        <h1>Edición de actores</h1>
+        <h1>Edición de actores</h1><br>
 		 <!-- INCLUIR CÓDIGO PHP -->
         <?php
-        
-        //Obtenemos los datos del actor
-        $actor = actores_crud::obtener($_GET['id']);
 
         //Comprobamos si se le ha dado al botón GUARDAR
         if(isset($_POST['guardar'])){
+            //Creamos el actor con los datos guardados
+            $actor_actualizado = new actor($_POST['id'], $_POST['nombre'], $_POST['anyo'], $_POST['pais']);
             //Actualizamos el actor de la BD
-            if(actores_crud::actualizar($actor) == 1){
+            if(actores_crud::actualizar($actor_actualizado) == 1){
                 echo "<div class='alert alert-success' role='alert'>";
                 echo "El actor ha sido actualizado correctamente.<br>";
-                echo "<a href='peliculas.html'>Volver al incio</a>";
+                echo "<a href='peliculas.php'>Volver al incio</a>";
                 echo "</div>"; 
             }else{
                 echo "<div class='alert alert-success' role='alert'>";
                 echo "ERROR! No se ha podido actualizar el actor. Inténtelo de nuevo más tarde.<br>";
-                echo "<a href='peliculas.html'>Volver al incio</a>";
+                echo "<a href='peliculas.php'>Volver al incio</a>";
                 echo "</div>"; 
             }
         }
+
+        //Obtenemos los datos del actor
+        $actor = actores_crud::obtener($_GET['id']);
         
         ?>
 
         <form name="edicion" method="post" action=''.$_SERVER[PHP_SELF]>
-            
-            Nombre: <br><input type="text" name="nombre" placeholder="<?php echo "".$actor->getNombre(); ?>"><br>
+            <input type='hidden' name='id' value='<?php echo "".$actor->getId().""; ?>'>
+
+            Nombre: <br><input type="text" name="nombre" value="<?php echo "".$actor->getNombre(); ?>"><br>
             <br> 
-            Año de Nacimiento: <br><input type="text" name="anyo" placeholder="<?php echo "".$actor->getAnyo(); ?>"><br>
+            Año de Nacimiento: <br><input type="text" name="anyo" value="<?php echo "".$actor->getAnyo(); ?>"><br>
             <br>
-            País: <br><input type="text" name="pais" placeholder="<?php echo "".$actor->getPais(); ?> "><br>
+            País: <br><input type="text" name="pais" value="<?php echo "".$actor->getPais(); ?> "><br>
             <br>
             <input class = "btn btn-primary" type="submit" name="guardar" value="Guardar">
         </form>

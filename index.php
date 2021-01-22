@@ -1,7 +1,7 @@
 <?php
 
 //Incluímos librerías
-include("bbdd/usuarios_crud.php");
+include_once("bbdd/usuarios_crud.php");
 
 //Variable que muestra error de login
 $error = false;

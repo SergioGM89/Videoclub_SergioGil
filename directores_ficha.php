@@ -1,6 +1,7 @@
 <?php
 //Incluímos las librerías
-include("bbdd/directores_crud.php");
+include_once("bbdd/directores_crud.php");
+include_once("classes/directores.php");
 ?>
 
 <!DOCTYPE html>
@@ -24,41 +25,38 @@ include("bbdd/directores_crud.php");
 
         <?php
 
+        $id = $_GET['id'];
+
         //Comprobamos si se le ha dado al botón BORRAR
         if(isset($_POST['borrar'])){
             //Eliminamos el director de la BD
-            if(directores_crud::eliminar($_GET['id']) == 1){
+            if(directores_crud::eliminar($id) == 1){
                 echo "<div class='alert alert-success' role='alert'>";
                 echo "El director ha sido borrado correctamente.<br>";
-                echo "<a href='peliculas.html'>Volver al incio</a>";
+                echo "<a href='peliculas.php'>Volver al incio</a>";
                 echo "</div>"; 
             }else{
                 echo "<div class='alert alert-success' role='alert'>";
                 echo "ERROR! No se ha podido eliminar el director. Inténtelo de nuevo más tarde.<br>";
-                echo "<a href='peliculas.html'>Volver al incio</a>";
+                echo "<a href='peliculas.php'>Volver al incio</a>";
                 echo "</div>"; 
             }
-        }
-         
-        //Array con los directores de la BD
-        $array_directores = directores_crud::mostrar();
+        }else{//Si no se le ha dado a BORRAR
+            //Obtenemos el director de la BD
+            $director = directores_crud::obtener($id);
 
-        foreach ($array_directores as $director) {
-            //Mostramos los datos del director solicitado mediante GET
-            if ($director->id == $_GET['id']) {
-                echo "<b>Nombre: </b>".$director->nombre."<br>";
-                echo "<b>Año de Nacimiento: </b>".$director->anyoNacimiento."<br>";
-                echo "<b>País: </b>".$director->pais."<br>";
-                continue;
-            }
-        }
-
+            //Mostramos los datos del director
+            echo "<b>Nombre: </b>".$director->getNombre()."<br>";
+            echo "<b>Año de Nacimiento: </b>".$director->getAnyo()."<br>";
+            echo "<b>País: </b>".$director->getPais()."<br>";
+        
         ?>
         <!-- BOTONES EDITAR Y BORRAR -->
-        <table>
+        <table style="width: 10%;">
             <td>
                 <div>
-                    <form class='boton_editar' method='post' action='directores_form.php'>
+                    <form class='boton_editar' method='get' action='directores_form.php'>
+                        <input type='hidden' name='id' value='<?php echo "".$id; ?>'>
                         <div class='editar'><input class='btn btn-primary' type='submit' value='Editar' name='editar'></div>
                     </form>
                 </div>
@@ -73,6 +71,7 @@ include("bbdd/directores_crud.php");
                 </div>
             </td>
         </table>
+        <?php } //Cerramos el else ?>  
     </div>
 </body>
 

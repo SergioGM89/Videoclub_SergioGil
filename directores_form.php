@@ -1,6 +1,7 @@
 <?php
 //Incluímos las librerías
-include("bbdd/directores_crud.php");
+include_once("bbdd/directores_crud.php");
+include_once("classes/directores.php");
 ?>
 
 
@@ -21,38 +22,41 @@ include("bbdd/directores_crud.php");
         <a href="./peliculas.php" class="btn btn-dark">Películas</a>&nbsp;&nbsp;
     </div>
     <div class="container">
-        <h1>Edición de directores</h1>
+        <h1>Edición de directores</h1><br>
 		 <!-- INCLUIR CÓDIGO PHP -->
         <?php
         
-        //Obtenemos los datos del director
-        $director = directores_crud::obtener($_GET['id']);
-
         //Comprobamos si se le ha dado al botón GUARDAR
         if(isset($_POST['guardar'])){
+            //Creamos el director con los datos guardados
+            $director_actualizado = new director($_POST['id'], $_POST['nombre'], $_POST['anyo'], $_POST['pais']);
             //Actualizamos el director de la BD
-            if(directores_crud::actualizar($director) == 1){
+            if(directores_crud::actualizar($director_actualizado) == 1){
                 echo "<div class='alert alert-success' role='alert'>";
                 echo "El director ha sido actualizado correctamente.<br>";
-                echo "<a href='peliculas.html'>Volver al incio</a>";
+                echo "<a href='peliculas.php'>Volver al incio</a>";
                 echo "</div>"; 
             }else{
                 echo "<div class='alert alert-success' role='alert'>";
                 echo "ERROR! No se ha podido actualizar el director. Inténtelo de nuevo más tarde.<br>";
-                echo "<a href='peliculas.html'>Volver al incio</a>";
+                echo "<a href='peliculas.php'>Volver al incio</a>";
                 echo "</div>"; 
             }
         }
+
+        //Obtenemos los datos del director
+        $director = directores_crud::obtener($_GET['id']);
         
         ?>
 
         <form name="edicion" method="post" action=''.$_SERVER[PHP_SELF]>
+            <input type='hidden' name='id' value='<?php echo "".$director->getId().""; ?>'>
             
-            Nombre: <br><input type="text" name="nombre" placeholder="<?php echo "".$director->getNombre(); ?>"><br>
+            Nombre: <br><input type="text" name="nombre" value="<?php echo "".$director->getNombre(); ?>"><br>
             <br> 
-            Año de Nacimiento: <br><input type="text" name="anyo" placeholder="<?php echo "".$director->getAnyo(); ?>"><br>
+            Año de Nacimiento: <br><input type="text" name="anyo" value="<?php echo "".$director->getAnyo(); ?>"><br>
             <br>
-            País: <br><input type="text" name="pais" placeholder="<?php echo "".$director->getPais(); ?> "><br>
+            País: <br><input type="text" name="pais" value="<?php echo "".$director->getPais(); ?> "><br>
             <br>
             <input class = "btn btn-primary" type="submit" name="guardar" value="Guardar">
         </form>

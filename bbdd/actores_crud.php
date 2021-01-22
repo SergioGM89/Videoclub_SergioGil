@@ -1,7 +1,7 @@
 <?php
 //Incluímos las librerías
-include("lib/database.php");
-include("classes/actores.php");
+include_once("lib/database.php");
+include_once("classes/actores.php");
 
 class actores_crud
 {
@@ -54,7 +54,7 @@ class actores_crud
         //Conectamos con la BD de viodeclub
         $pdo = Database::connect();
 
-        $sql = "UPDATE ".self::TABLA." SET nombre = :nombre, anyoNacimiento = :anyoNacimiento, pais = :pais WHERE id = :id";
+        $sql = "UPDATE ".self::TABLA." SET nombre =:nombre, anyoNacimiento =:anyoNacimiento, pais =:pais WHERE id =:id";
         $query = $pdo->prepare($sql);
 
         //Enlazamos los parámetros
