@@ -1,33 +1,66 @@
 <?php
 
 //Incluímos librerías
+include_once("classes/usuarios.php");
 include_once("bbdd/usuarios_crud.php");
 
 //Variable que muestra error de login
 $error = false;
 
-/* AÑADIR SESIÓN
-if (login_OK($_POST['email'], $_POST['contrasenya'])) {
-    //Creamos la sesión
-    session_start();
-    //Identificamos la sesión
-    $_SESSION['nombre'] = $_POST['email'];
+///////////COOKIE DE CREDENCIALES GUARDADAS///////////
+//Comprobamos si existe la Cookie de credenciales
+$cookieExist = false;
+if(isset($_COOKIE['credenciales'])){
+    $cookieExist = true;
 }
-*/
 
+/////////// AÑADIR SESIÓN ///////////////
 //Comprobamos si ha enviado los datos para logearse
-if(isset($_POST['email'], $_POST['contrasenya'])){
-    //Comprobamos si está registrado ese usuario y contraseña en la BD  
-    if(usuarios_crud::validarUsuario($_POST['email'], $_POST['contrasenya'])){
-        //Instanciamos al usuario
-        //$user = instanciaUsuario();
-        //Creamos una sesión
-        session_start();
-        header('location:peliculas.php');//Redireccionamos a peliculas.php si el login es correcto    
+if (isset($_POST['email'], $_POST['contrasenya'])) {
+    //Guardamos las variables
+    $usuario = $_POST["email"];
+    $password = $_POST["contrasenya"];
+    if(isset($_POST["credencialesOK"])){
+    $credenciales = $_POST["credencialesOK"];
     }else{
+        $credenciales = false;
+    }
+
+    //Comprobamos si está registrado ese usuario y contraseña en la BD
+    $id = usuario::validarUsuario($usuario, $password);
+    if ($id > 0) {
+
+        //Actualizamos el usuario en la BD para introducir el valor 
+        //de guardarCredenciales según el formulario
+        $userBD = usuarios_crud::obtener($id);
+        if(($userBD->getCredenciales()) != $credenciales){
+            $userBD->setCredenciales($credenciales);
+            usuarios_crud::actualizar($userBD);
+        }
+
+        if($userBD->getCredenciales()){
+            setcookie("credenciales", $id, (time()+(60*60*24*365)));
+        }else{
+            setcookie("credenciales", "", (time()-(60*60*24*365)));
+        }
+
+        // Iniciamos sesión
+        session_start();
+        $_SESSION['usuario'] = "$usuario";
+
+        //Redireccionamos a peliculas.php
+        header("Location: peliculas.php");
+
+        //terminamos la ejecución ya que si redireccionamos ya no nos interesa 
+        //seguir ejecutando código de este archivo
+        exit();
+    } else {
+        // Si el usuario no se encuentra en la BD 
+        //imprime el siguiente mensaje 
         $error = true;
     }
 }
+
 
 
 ?>
@@ -53,18 +86,24 @@ if(isset($_POST['email'], $_POST['contrasenya'])){
             <img src="./imgs/portada.png" class="mx-auto d-block" />
         </div>
         <div style="display: inline-block;">
-            <form name="login" method="post" action="".$_SERVER[PHP_SELF]>
+            <form name="login" method="post" action="" .$_SERVER[PHP_SELF]>
 
-            <?php
-                if($error){
+                <?php
+                if ($error) {
                     echo "<p style='color:red';><b>Email o contraseña incorrectas</b></p>";
                 }
-            ?>
+
+                if($cookieExist){
+                    $usuario_cookie = usuarios_crud::obtener($_COOKIE["credenciales"]);
+                    $mail = $usuario_cookie->getNombre();
+                    $pass = $usuario_cookie->getContrasenya(); 
+                }
+                ?>
                 <p>Correo electrónico</p>
-                <input type="text" name="email"><br><br>
+                <input type="text" name="email" <?php if($cookieExist){ echo "value=$mail"; }?>><br><br>
                 <p>Contraseña</p>
-                <input type="password" name="contrasenya"><br><br>
-                <p><input type="checkbox" name="credencialesOK">
+                <input type="password" name="contrasenya" <?php if($cookieExist){ echo "value=$pass"; }?>><br><br>
+                <p><input type="checkbox" name="credencialesOK" value =true <?php if($cookieExist){ echo "checked"; }?>>
                     Guardar mis credenciales</p>
                 <input class="btn btn-primary" type="submit" name="acceder" value="Acceder">
             </form>

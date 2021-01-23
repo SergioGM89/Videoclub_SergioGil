@@ -8,6 +8,35 @@ class directores_crud
 
     const TABLA = "directores";
 
+    //////// Inserta un director nuevo con los datos pasados como argumento en la función ////////
+    public static function insertar($objeto)
+    {
+
+        //Pasamos los datos del objeto a variables
+        $nombre = $objeto->getNombre();
+        $anyo = $objeto->getAnyo();
+        $pais = $objeto->getPais();
+
+        //Conectamos con la BD de viodeclub
+        $pdo = Database::connect();
+
+        $sql = "INSERT INTO " . self::TABLA . "(nombre, anyoNacimiento, pais) VALUES (:nombre, :anyo, :pais)";
+        $query = $pdo->prepare($sql);
+
+        //Enlazamos los parámetros
+        $query->bindParam(':nombre', $nombre, PDO::PARAM_STR, 50);
+        $query->bindParam(':anyo', $anyo, PDO::PARAM_STR, 4);
+        $query->bindParam(':pais', $pais, PDO::PARAM_STR, 50);
+
+        $query->execute();
+        $filas_actualizadas = $query->rowCount();
+
+        $pdo = Database::disconnect();
+
+        return $filas_actualizadas;//Devolvemos el nº de filas afectadas
+    }
+
+    ///////// Devuelve desde la BD todos los directores en un array ////////
     public static function mostrar()
     {
 

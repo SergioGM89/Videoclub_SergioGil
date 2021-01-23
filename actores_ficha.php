@@ -1,4 +1,15 @@
 <?php
+
+//abrimos la sesión
+session_start();
+ 
+//Si la variable sesión está vacía nos redirecciona al index.html
+if (!isset($_SESSION['usuario'])) 
+{
+   header("location:./index.php");
+   exit();
+}
+
 //Incluímos las librerías
 include_once("bbdd/actores_crud.php");
 ?>

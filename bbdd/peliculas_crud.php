@@ -10,6 +10,35 @@ class peliculas_crud
     const PelAct = "peliculas_actores";
     const PelDir = "peliculas_directores";
 
+    //////// Inserta una película nueva con los datos pasados como argumento en la función ////////
+    public static function insertar($objeto)
+    {
+
+        //Pasamos los datos del objeto a variables
+        $titulo = $objeto->getTitulo();
+        $anyo = $objeto->getAnyo();
+        $duracion = $objeto->getDuracion();
+
+        //Conectamos con la BD de viodeclub
+        $pdo = Database::connect();
+
+        $sql = "INSERT INTO " . self::TABLA . " (titulo, anyo, duracion) VALUES (:titulo, :anyo, :duracion)";
+        $query = $pdo->prepare($sql);
+
+        //Enlazamos los parámetros
+        $query->bindParam(':titulo', $titulo, PDO::PARAM_STR, 50);
+        $query->bindParam(':anyo', $anyo, PDO::PARAM_STR, 4);
+        $query->bindParam(':duracion', $duracion, PDO::PARAM_INT, 3);
+
+        $query->execute();
+        $filas_actualizadas = $query->rowCount();
+
+        $pdo = Database::disconnect();
+
+        return $filas_actualizadas;//Devolvemos el nº de filas afectadas
+    }
+
+    ///////// Devuelve desde la BD todos las películas en un array ////////
     public static function mostrar()
     {
 
@@ -51,7 +80,7 @@ class peliculas_crud
         $id = $objeto->getId();
         $titulo = $objeto->getTitulo();
         $anyo = $objeto->getAnyo();
-        $duracion = $objeto->getDuracion();
+        $duracion = $objeto->getduracion();
 
         //Conectamos con la BD de viodeclub
         $pdo = Database::connect();
@@ -62,7 +91,7 @@ class peliculas_crud
         //Enlazamos los parámetros
         $query->bindParam(':titulo', $titulo, PDO::PARAM_STR, 50);
         $query->bindParam(':anyo', $anyo, PDO::PARAM_STR, 4);
-        $query->bindParam(':duracion', $duracion, PDO::PARAM_STR, 50);
+        $query->bindParam(':duracion', $duracion, PDO::PARAM_INT, 3);
         $query->bindParam(':id', $id, PDO::PARAM_INT, 11);
 
         $query->execute();

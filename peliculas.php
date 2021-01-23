@@ -1,19 +1,18 @@
 <?php
 
+//abrimos la sesión
+session_start();
+ 
+//Si la variable sesión está vacía nos redirecciona al index.html
+if (!isset($_SESSION['usuario'])) 
+{
+   header("location:./index.php");
+   exit();
+}
+
 //Cargamos las librerías
 include_once("bbdd/peliculas_crud.php");
 
-
-/*include("lib/utils.php");
-include("lib/database.php");
-$pdo = Database::connect();
-
-if (login_OK($_POST['email'], $_POST['contrasenya'])) {
-    //Creamos la sesión
-    session_start();
-    //Identificamos la sesión
-    $_SESSION['nombre'] = $_POST['email'];
-}*/
 ?>
 
 
